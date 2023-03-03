@@ -4,14 +4,17 @@
 
 #define return_and_display(result) return _.store(result);
 
+//retourne l’index de value dans array (pour ce faire, il faudra parcourir le tableau
+// dans le sens inverse en accédant à chaque appel à la dernière case)
 
 int search(int value, Array& toSort, int size)
 {
     Context _("search", value, size); // do not care about this, it allow the display of call stack
 
-    // your code
-    // check the last cell and if it does not correspond
-    // then consider a smaller array when recalling search
+    // check the last cell
+    if(toSort[size-1] == value) return size-1;
+    // and if it does not correspond then consider a smaller array when recalling search
+    else return_and_display(search(value,toSort,size-1));
 }
 
 int main(int argc, char *argv[])

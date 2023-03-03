@@ -9,8 +9,11 @@ long power(long value, long n)
     Context _("power", value, n); // do not care about this, it allow the display of call stack
 
     // your code
-    // return_and_display shows the result in the window and returns it
-    return_and_display(1);
+    if(n==0)
+        {
+            return_and_display(1);
+        }
+    return_and_display(power(value, n-1)*value);
 }
 
 int main(int argc, char *argv[])

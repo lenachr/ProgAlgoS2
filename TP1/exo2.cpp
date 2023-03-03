@@ -4,13 +4,16 @@
 
 #define return_and_display(result) return _.store(result);
 
-int fibonacci(int value)
+int fibonacci(int n)
 {
-    Context _("fibonacci", value); // do not care about this, it allow the display of call stack
+    Context _("fibonacci", n); // do not care about this, it allow the display of call stack
 
     // your code
-
-    return_and_display(value);
+    if (n==0)
+        return 0;
+    if (n==1)
+        return 1;
+    return_and_display(fibonacci(n-2)+fibonacci(n-1));
 }
 
 int main(int argc, char *argv[])
