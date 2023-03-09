@@ -11,8 +11,12 @@ int search(int value, Array& toSort, int size)
 {
     Context _("search", value, size); // do not care about this, it allow the display of call stack
 
+    // si la taille du tableau est nulle, on ne peut pas le parcourir
+    if(size==0) return -1;
     // check the last cell
-    if(toSort[size-1] == value) return size-1;
+    if(toSort[size-1] == value){
+        return_and_display(size-1);
+    }
     // and if it does not correspond then consider a smaller array when recalling search
     else return_and_display(search(value,toSort,size-1));
 }
