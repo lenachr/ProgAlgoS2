@@ -23,9 +23,9 @@ int isMandelbrot(Point z, int n, Point point){
     // otherwise, process the square of z and recall
     // isMandebrot
     else{
-        float_t old_x = z.x;
-        z.x = (z.x+point.x)*(z.x+point.x) - (z.y+point.y)*(z.y+point.y); //partie réel du z au carré
-        z.y = 2*(old_x+point.x)*(z.y+point.y); //partie imaginaire du z au carré
+        float old_x = z.x;
+        z.x = (z.x*z.x-z.y*z.y) + point.x; //partie réel du z au carré
+        z.y = 2*old_x*z.y + point.y; //partie imaginaire du z au carré
         return isMandelbrot(z,n-1,point); //on rappelle la fonction
     }
 }
