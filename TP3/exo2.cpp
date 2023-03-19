@@ -14,8 +14,28 @@ using std::size_t;
  */
 void binarySearchAll(Array& array, int toSearch, int& indexMin, int& indexMax)
 {
-	// do not use increments, use two different binary search loop
-    indexMin = indexMax = -1;
+    // création de booléens pour repérer si toSearch est bien dans le tableau
+    bool foundMin = false;
+    bool foundMax = false;
+
+    // parcours du tableau partant du début pour chercher l'indexMin
+    for(indexMin = 0;indexMin<array.size()-1;indexMin++){
+        if(toSearch==array[indexMin]){
+            foundMin = true; // toSearch est trouvée
+            break; // on sort de la boucle
+        }
+    }
+
+    // parcours du tableau à l'envers pour chercher l'indexMax
+    for(indexMax = array.size()-1;indexMax>=0;indexMax--){
+        if(toSearch==array[indexMax]){
+            foundMax = true; // toSearch est trouvée
+            break; // on sort de la boucle
+        }
+    }
+
+    // après avoir parcouru le tableau, si toSearch n'est pas trouvée, les index sont mis à -1
+    if(foundMin == false && foundMax == false) indexMin = indexMax = -1;
 }
 
 int main(int argc, char *argv[])
