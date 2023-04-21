@@ -3,7 +3,8 @@
 #include <time.h>
 #include <stdio.h>
 #include <string>
-
+#include <math.h>
+#include <iostream>
 #include <tp5.h>
 
 MainWindow* w = nullptr;
@@ -23,8 +24,15 @@ std::vector<string> TP5::names(
 unsigned long int hash(string key)
 {
     // return an unique hash id from key
-    return 0;
+    // on utilise le hachage polynomiale
+    unsigned long int hash_value = 0;
+    for(int i = 0 ; i < key.size() ; i++)
+    {
+        hash_value += key[i] * pow(128, key.size()-1-i); // somme de la valeur ASCII de chaque caractère
+    }
+    return hash_value;
 }
+
 
 struct MapNode : public BinaryTree
 {
@@ -52,7 +60,24 @@ struct MapNode : public BinaryTree
      */
     void insertNode(MapNode* node)
     {
+        // si la valeur est plus grande que l'actuelle
+        // et que la cellule de gauche est vide
+        if(node->key_hash < this->key_hash && this->left == nullptr){
+            this->left = node;
+        }
+        // si la valeur est plus petite que l'actuelle
+        // et que la cellule de droite est vide
+        else if(node->key_hash > this->key_hash && this->right == nullptr){
+            this->right = node;
+        }
 
+        //cas où les cellules à côté sont pas vides
+        else if(node->key_hash < this->key_hash && this->left != nullptr){
+            this->left->insertNode(node); // on réappelle la fonction pour les enfants
+        }
+        else if(node->key_hash > this->key_hash && this->right != nullptr){
+            this->right->insertNode(node); // on réappelle la fonction pour les enfants
+        }
     }
 
     void insertNode(string key, int value)
@@ -68,6 +93,8 @@ struct MapNode : public BinaryTree
 
 struct Map
 {
+    MapNode* root;
+
     Map() {
         this->root = nullptr;
     }
@@ -79,7 +106,11 @@ struct Map
      */
     void insert(string key, int value)
     {
-
+        MapNode* node = new MapNode(key, value);
+        if (this->root == nullptr){
+            this->root = node;
+        }
+        else this->root->insertNode(node);
     }
 
     /**
@@ -89,17 +120,28 @@ struct Map
      */
     int get(string key)
     {
-        return -1;
+        unsigned long int h_key = hash(key);
+        MapNode* temp = this->root;
+        while(temp != nullptr){
+            if(temp->key_hash == h_key){
+                return temp->value;
+            }
+            else if(h_key < temp->key_hash){
+                temp = temp->left;
+            }
+            else if(h_key > temp->key_hash){
+                temp = temp->right;
+            }
+        }
     }
-
-    MapNode* root;
 };
 
 
 int main(int argc, char *argv[])
 {
     srand(time(NULL));
-	Map map;
+    Map map;
+    std::vector<std::string> inserted;
 
     map.insert("Yolo", 20);
     for (std::string& name : TP5::names)
@@ -107,8 +149,10 @@ int main(int argc, char *argv[])
         if (rand() % 3 == 0)
         {
             map.insert(name, rand() % 21);
+            inserted.push_back(name);
         }
     }
+
 
     printf("map[\"Margot\"]=%d\n", map.get("Margot"));
     printf("map[\"Jolan\"]=%d\n", map.get("Jolan"));
@@ -116,6 +160,13 @@ int main(int argc, char *argv[])
     printf("map[\"Clemence\"]=%d\n", map.get("Clemence"));
     printf("map[\"Yolo\"]=%d\n", map.get("Yolo"));
     printf("map[\"Tanguy\"]=%d\n", map.get("Tanguy"));
+
+    printf("\n");
+    for (size_t i=0; i<inserted.size()/2; i++)
+        printf("map[\"%s\"]=%d\n", inserted[i].c_str(), map.get(inserted[i]));
+
+
+    std::cout.flush();
 
 
     QApplication a(argc, argv);
