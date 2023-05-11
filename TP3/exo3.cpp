@@ -36,7 +36,7 @@ struct SearchTreeNode : public Node
             this->right = test;
         }
 
-        //cas où les cellules à côté sont vides
+        //cas où les cellules à côté sont pas vides
         if(value < this->value && this->left != nullptr){
             this->left->insertNumber(value); // on réappelle la fonction pour les enfants
         }

@@ -9,14 +9,14 @@ MainWindow* w = nullptr;
 using std::size_t;
 using std::string;
 
-int Heap::leftChild(int nodeIndex)
+int Heap::leftChildIndex(int nodeIndex)
 {
     // retourne l’index du fils gauche du noeud à l’indice nodeIndex
 
     return (nodeIndex*2)+1;
 }
 
-int Heap::rightChild(int nodeIndex)
+int Heap::rightChildIndex(int nodeIndex)
 {
     return (nodeIndex*2)+2;
 }
@@ -39,12 +39,12 @@ void Heap::heapify(int heapSize, int nodeIndex)
     int i_max = nodeIndex; // indice de la valeur la plus grande entre le noeud i et ses enfants
     int i = heapSize;
 
-    if(rightChild(nodeIndex)<i && this->get(rightChild(nodeIndex))>this->get(nodeIndex)){
-        i_max = this->rightChild(nodeIndex);
+    if(rightChildIndex(nodeIndex)<i && this->get(rightChildIndex(nodeIndex))>this->get(nodeIndex)){
+        i_max = this->rightChildIndex(nodeIndex);
     }
 
-    if(leftChild(nodeIndex)<i && this->get(leftChild(nodeIndex))>this->get(i_max)){
-        i_max = this->leftChild(nodeIndex);
+    if(leftChildIndex(nodeIndex)<i && this->get(leftChildIndex(nodeIndex))>this->get(i_max)){
+        i_max = this->leftChildIndex(nodeIndex);
     }
 
     if(i_max != i){
