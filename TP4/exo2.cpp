@@ -57,7 +57,6 @@ void processCharFrequences(string data, Array& frequences)
       * is the frequence of the caracter with ASCII code i
      **/
 
-    // Your code
     frequences.fill(0);
     for(uint i=0; i<data.size(); i++){
         frequences[data[i]]++;
@@ -75,7 +74,6 @@ void HuffmanHeap::insertHeapNode(int heapSize, HuffmanNode* newNode)
       * you can use `this->swap(firstIndex, secondIndex)`
      **/
 
-    // Your code
     int i = heapSize;
     (*this)[i] = newNode;
     while(i>0 && this->get(i)->frequences < this->get((i-1)/2)->frequences) { //parent doit être plus petit que l'enfant
@@ -93,7 +91,6 @@ void buildHuffmanHeap(const Array& frequences, HuffmanHeap& priorityMinHeap, int
       * allocate a HuffmanNode with `new`
      **/
 
-    // Your code
     heapSize = 0;
     for(uint i = 0; i<frequences.size(); i++){
         if(frequences[i] != 0){
@@ -113,7 +110,7 @@ void HuffmanHeap::heapify(int heapSize, int nodeIndex)
       * this->get(i): HuffmanNode*  <-> this->get(i)->frequences
       * you can use `this->swap(firstIndex, secondIndex)`
      **/
-    // Your code
+
     int i_min = nodeIndex; // indice de la valeur la plus petite entre le noeud i et ses enfants
     int i = heapSize;
 
@@ -141,10 +138,9 @@ HuffmanNode* HuffmanHeap::extractMinNode(int heapSize)
       * you can use `this->swap`
      **/
 
-    // Your code
-    swap(0, heapSize);
-    heapify(heapSize, i);
-    return
+    this->swap(0, heapSize);
+    this->heapify(heapSize, 0);
+    return this->get(heapSize);
 }
 
 HuffmanNode* makeHuffmanSubTree(HuffmanNode* rightNode, HuffmanNode* leftNode)
@@ -155,8 +151,12 @@ HuffmanNode* makeHuffmanSubTree(HuffmanNode* rightNode, HuffmanNode* leftNode)
      * and frequence is the sum of the 2 children frequences
      * Return the new HuffmanNode* parent
      **/
-    // Your code
-    return new HuffmanNode('\0');
+
+    HuffmanNode* parent = new HuffmanNode('\0');
+    parent->left = leftNode;
+    parent->right = rightNode;
+    parent->frequences = rightNode->frequences + leftNode->frequences;
+    return parent;
 }
 
 HuffmanNode* buildHuffmanTree(HuffmanHeap& priorityMinHeap, int heapSize)
@@ -169,6 +169,7 @@ HuffmanNode* buildHuffmanTree(HuffmanHeap& priorityMinHeap, int heapSize)
      **/
 
     // Your code
+
     return new HuffmanNode('?');
 }
 
@@ -182,7 +183,11 @@ void HuffmanNode::processCodes(const std::string& baseCode)
       * If the node is a leaf, it takes the baseCode.
      **/
 
-    // Your code
+    if(!this->left && !this->right) this->code = baseCode;
+    else {
+        if(this->left) this->left->processCodes(baseCode+"0");
+        if(this->right) this->right->processCodes(baseCode+"1");
+    }
 }
 
 void HuffmanNode::fillCharactersArray(std::string charactersCodes[])
@@ -209,11 +214,12 @@ string huffmanEncode(const string& toEncode, HuffmanNode* huffmanTree)
       * With the huffmanTree, determine the code for each character
      **/
 
-    // Your code
     std::string charactersCodes[256]; // array of 256 huffman codes for each character
     huffmanTree->fillCharactersArray(charactersCodes);
     string encoded = "";
-
+    for(int i=0; i<toEncode.size();i++){
+        encoded+=charactersCodes[toEncode[i]];
+    }
     return encoded;
 }
 
